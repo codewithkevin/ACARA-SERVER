@@ -2,12 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 
+
+//Require Service
+const userRoute = require("./routes/user");
+
 //env
 const port = process.env.PORT;
 const mongo = process.env.MONG_URI;
 
 //express app
 const app = express();
+
 
 //Middleware
 app.use(express.json());
@@ -16,7 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-
+//Use Routes 
+app.use("/api/user", userRoute);
 
 
 
