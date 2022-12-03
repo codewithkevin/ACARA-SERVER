@@ -22,10 +22,22 @@ const userSchema = new Schema({
 
 //Stateic SingUp Method
 userSchema.statics.signup = async function (email, password, name) {
-  const exist = await this.findOne({ email });
+  const exists = await this.findOne({ email });
 
-  if (exist) {
+  if (exists) {
     throw Error("Email Already Exist");
+  }
+
+  //Validation
+  if (!email || !password || !name) {
+    throw new Error("All Feilds are required");
+  }
+  if (!validator.isEmail(email)) {
+    throw new Error("Email not Valid");
+  }
+
+  if (!validator.isStrongPassword(password)) {
+    throw new Error("Password not Strong");
   }
 
   //Generate Salt
@@ -42,21 +54,42 @@ userSchema.statics.signup = async function (email, password, name) {
 
 userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
-    throw Error("All fields must be filled");
+    throw new Error("All fields must be filled");
   }
 
   const user = await this.findOne({ email });
-
   if (!user) {
-    throw Error("Email Doesn' Exist");
+    throw new Error("Incorrect email");
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    throw Error("Incorrect password");
+    throw new Error("Incorrect password");
   }
 
   return user;
+};
+
+userSchema.statics.check = async function (email, password, name) {
+  const exists = await this.findOne({ email });
+
+  if (exists) {
+    throw Error("Email Already Exist");
+  }
+
+  //Validation
+  if (!email || !password || !name) {
+    throw new Error("All Feilds are required");
+  }
+
+  if (!validator.isEmail(email)) {
+    throw new Error("Email not Valid");
+  }
+
+  if (!validator.isStrongPassword(password)) {
+    throw new Error("Password not Strong");
+  }
+
 };
 
 module.exports = mongoose.model("User", userSchema);
