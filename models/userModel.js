@@ -14,6 +14,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  interest: {
+    type: Array,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
@@ -21,7 +25,7 @@ const userSchema = new Schema({
 });
 
 //Stateic SingUp Method
-userSchema.statics.signup = async function (email, password, name) {
+userSchema.statics.signup = async function (email, password, name, interest) {
   const exists = await this.findOne({ email });
 
   if (exists) {
@@ -29,7 +33,7 @@ userSchema.statics.signup = async function (email, password, name) {
   }
 
   //Validation
-  if (!email || !password || !name) {
+  if (!email || !password || !name || !interest) {
     throw new Error("All Feilds are required");
   }
   if (!validator.isEmail(email)) {
@@ -38,6 +42,10 @@ userSchema.statics.signup = async function (email, password, name) {
 
   if (!validator.isStrongPassword(password)) {
     throw new Error("Password not Strong");
+  }
+
+  if (interest.length < 3) {
+    throw new Error("At least 3 interests are required");
   }
 
   //Generate Salt
@@ -89,7 +97,6 @@ userSchema.statics.check = async function (email, password, name) {
   if (!validator.isStrongPassword(password)) {
     throw new Error("Password not Strong");
   }
-
 };
 
 module.exports = mongoose.model("User", userSchema);
