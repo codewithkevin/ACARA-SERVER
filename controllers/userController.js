@@ -37,11 +37,11 @@ const signupUser = async (req, res) => {
 
 //CheckError
 const checkError = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const faultyerror = await User.check(email, password, name);
-    res.status(200).json({ email, name });
+    const faultyerror = await User.check(email, password);
+    res.status(200).json({ email });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

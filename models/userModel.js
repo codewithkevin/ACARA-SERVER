@@ -78,7 +78,7 @@ userSchema.statics.login = async function (email, password) {
   return user;
 };
 
-userSchema.statics.check = async function (email, password, name) {
+userSchema.statics.check = async function (email, password) {
   const exists = await this.findOne({ email });
 
   if (exists) {
@@ -86,7 +86,7 @@ userSchema.statics.check = async function (email, password, name) {
   }
 
   //Validation
-  if (!email || !password || !name) {
+  if (!email || !password) {
     throw new Error("All Feilds are required");
   }
 
