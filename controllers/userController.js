@@ -47,4 +47,16 @@ const checkError = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, checkError };
+//CheckInterest
+const interestError = async (req, res) => {
+  const { interest } = req.body;
+
+  try {
+    const faultyerror = await User.checkInterest(interest);
+    res.status(200).json({ interest });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { signupUser, loginUser, checkError, interestError };

@@ -33,7 +33,7 @@ userSchema.statics.signup = async function (email, password, name, interest) {
   }
 
   //Validation
-  if (!email || !password || !name || !interest) {
+  if (!email || !password || !name) {
     throw new Error("All Feilds are required");
   }
   if (!validator.isEmail(email)) {
@@ -96,6 +96,12 @@ userSchema.statics.check = async function (email, password) {
 
   if (!validator.isStrongPassword(password)) {
     throw new Error("Password not Strong");
+  }
+};
+
+userSchema.statics.checkInterest = async function (interest) {
+  if (interest.length < 3) {
+    throw new Error("At least 3 interests are required");
   }
 };
 
