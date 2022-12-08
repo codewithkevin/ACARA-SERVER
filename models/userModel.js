@@ -22,32 +22,25 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  username: {
+    type: String,
+    required: true,
+  },
+  gender: {
+    type: String,
+    required: true,
+  },
 });
 
 //Stateic SingUp Method
-userSchema.statics.signup = async function (email, password, name, interest) {
+userSchema.statics.signup = async function (email, password, name, interest, username, gender) {
   const exists = await this.findOne({ email });
 
-  if (exists) {
-    throw Error("Email Already Exist");
-  }
-
   //Validation
-  if (!email || !password || !name) {
+  if (!name || !username || !gender) {
     throw new Error("All Feilds are required");
   }
-  if (!validator.isEmail(email)) {
-    throw new Error("Email not Valid");
-  }
-
-  if (!validator.isStrongPassword(password)) {
-    throw new Error("Password not Strong");
-  }
-
-  if (interest.length < 3) {
-    throw new Error("At least 3 interests are required");
-  }
-
+  
   //Generate Salt
   const salt = await bcrypt.genSalt(10);
 
@@ -55,7 +48,14 @@ userSchema.statics.signup = async function (email, password, name, interest) {
   const hash = await bcrypt.hash(password, salt);
 
   //Create User
-  const user = await this.create({ email, password: hash, name });
+  const user = await this.create({
+    email,
+    password: hash,
+    name,
+    interest,
+    username,
+    gender,
+  });
 
   return user;
 };
