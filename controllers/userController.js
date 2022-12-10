@@ -1,7 +1,8 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const code = "1234";
+// const code = "1234";
+var code;
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "30d" });
@@ -72,6 +73,8 @@ const interestError = async (req, res) => {
 const sendEmail = async (req, res) => {
   const { email } = req.body;
 
+  generateRandomDigits();
+  
   let mailTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -98,6 +101,15 @@ const sendEmail = async (req, res) => {
     }
   });
 };
+
+//Generate number
+function generateRandomDigits() {
+  // Generate four random digits
+  var randomDigits = Math.floor(Math.random() * 9000) + 1000;
+
+  // Update the global variable with the new random digits
+  code = randomDigits;
+}
 
 //Check Email Confirmed
 const confirmedEmail = async (req, res) => {
