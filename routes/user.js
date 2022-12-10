@@ -4,6 +4,8 @@ const {
   loginUser,
   checkError,
   interestError,
+  sendEmail,
+  confirmedEmail,
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -19,5 +21,10 @@ router.post("/check", checkError);
 //Interest Error
 router.post("/checkinterest", interestError);
 
+//Send Email
+router.post("/sendmail", sendEmail);
+
+//Check Confirmation Code
+router.post("/confirmcode", confirmedEmail);
 
 module.exports = router;

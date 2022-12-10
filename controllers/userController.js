@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const code = "1234";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "30d" });
@@ -66,4 +68,53 @@ const interestError = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, checkError, interestError };
+//Send Email Notification
+const sendEmail = async (req, res) => {
+  const { email } = req.body;
+
+  let mailTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  let details = {
+    from: process.env.EMAIL,
+    to: `${email}`,
+    subject: "Verification Code",
+    text: `${code}`,
+  };
+
+  mailTransport.sendMail(details, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ err: err.message });
+    }
+    if (!err) {
+      console.log("Sucessfully sent mail");
+      res.status(200).json({ email: "Email Sent" });
+    }
+  });
+};
+
+//Check Email Confirmed
+const confirmedEmail = async (req, res) => {
+  const { confirm } = req.body;
+
+  if (confirm == code) {
+    res.status(200).json({ code: "Confirmed Email" });
+  } else {
+    res.status(400).json("Not Implemented");
+  }
+};
+
+module.exports = {
+  signupUser,
+  loginUser,
+  checkError,
+  interestError,
+  sendEmail,
+  confirmedEmail,
+};
