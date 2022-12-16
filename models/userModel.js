@@ -41,7 +41,11 @@ userSchema.statics.signup = async function (
   username,
   gender
 ) {
-  const exists = await this.findOne({ email });
+  const exists = await this.findOne({ username });
+
+  if (exists) {
+    throw Error("username already exists");
+  }
 
   //Validation
   if (!name || !username || !gender) {
