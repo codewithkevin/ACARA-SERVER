@@ -33,14 +33,21 @@ const userSchema = new Schema({
 });
 
 //Stateic SingUp Method
-userSchema.statics.signup = async function (email, password, name, interest, username, gender) {
+userSchema.statics.signup = async function (
+  email,
+  password,
+  name,
+  interest,
+  username,
+  gender
+) {
   const exists = await this.findOne({ email });
 
   //Validation
   if (!name || !username || !gender) {
     throw new Error("All Feilds are required");
   }
-  
+
   //Generate Salt
   const salt = await bcrypt.genSalt(10);
 
@@ -85,17 +92,16 @@ userSchema.statics.check = async function (email, password) {
     throw Error("Email Already Exist");
   }
 
-  //Validation
   if (!email || !password) {
-    throw new Error("All Feilds are required");
+    throw Error("All Feilds are required");
   }
 
   if (!validator.isEmail(email)) {
-    throw new Error("Email not Valid");
+    throw Error("Email not Valid");
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw new Error("Password not Strong");
+    throw Error("Password not Strong");
   }
 };
 

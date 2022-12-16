@@ -84,7 +84,7 @@ const sendEmail = async (req, res) => {
   });
 
   let details = {
-    from: process.env.EMAIL,
+    from: "ACARA MOBILE APP",
     to: `${email}`,
     subject: "Verification Code",
     text: `${code}`,
