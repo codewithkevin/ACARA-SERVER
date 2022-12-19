@@ -8,6 +8,7 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "30d" });
 };
 
+
 //Login a user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -17,7 +18,9 @@ const loginUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token });
+    const details = await User.find({ token });
+
+    res.status(200).json({ email, token, details });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -74,7 +77,7 @@ const sendEmail = async (req, res) => {
   const { email } = req.body;
 
   generateRandomDigits();
-  
+
   let mailTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
